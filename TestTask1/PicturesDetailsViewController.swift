@@ -6,8 +6,18 @@
 //
 
 import UIKit
+import SDWebImage
 
 class PicturesDetailsViewController: UIViewController {
+    
+    private let networkDataFetcher = NetworkDataFetcher()
+    
+    private let picture: UnsplashPhoto
+    private var pictureDetails: PictureDetails? {
+        didSet {
+            setInfo()
+        }
+    }
     
     private let scrollView: UIScrollView = {
         let scroll = UIScrollView()
@@ -80,6 +90,18 @@ class PicturesDetailsViewController: UIViewController {
     
     private var sideInset: CGFloat { return 20 }
     
+    init(picture: UnsplashPhoto) {
+        self.picture = picture
+        super.init(nibName: nil, bundle: nil)
+        networkDataFetcher.fetchDetails(photoID: picture.id) { [weak self] details in
+            self?.pictureDetails = details
+        }
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -103,8 +125,25 @@ class PicturesDetailsViewController: UIViewController {
     }
     
     @objc private func save() {
+        savedImages.append(picture)
+        print(savedImages.count)
         cancel()
     }
+    
+    private func setInfo() {
+        guard let picture = pictureDetails else { return }
+        imageView.sd_setImage(with: URL(string: picture.urls.regular), completed: nil)
+        authorLabel.text = picture.user.name
+    }
+    
+//    var unsplashPhoto: UnsplashPhoto! {
+//        didSet {
+//            let photoURL = unsplashPhoto.urls["regular"]
+//            guard let imageURL = photoURL, let url = URL(string: imageURL) else { return }
+//
+//            pictureImageView.sd_setImage(with: url, completed: nil)
+//        }
+//    }
     
     private func setupViews() {
         

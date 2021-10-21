@@ -11,7 +11,7 @@ class NetworkDataFetcher {
     
     var networkService = NetworkService()
     
-    func fetchImages(searchTerm: String, completion: @ escaping (SearchResults?) -> ()) {
+    func fetchImages(searchTerm: String, completion: @escaping (SearchResults?) -> Void ) {
         networkService.request(searchTerm: searchTerm) { (data, error) in
             if let error = error {
                 print("Error: \(error.localizedDescription)")
@@ -19,6 +19,18 @@ class NetworkDataFetcher {
             }
             
             let decode = self.decodeJSON(type: SearchResults.self, from: data)
+            completion(decode)
+        }
+    }
+    
+    func fetchDetails(photoID: String, completion: @escaping (PictureDetails?) -> Void ) {
+        networkService.detailsRequest(photoID: photoID) { (data, error) in
+            if let error = error {
+                print("Error: \(error.localizedDescription)")
+                completion(nil)
+            }
+            
+            let decode = self.decodeJSON(type: PictureDetails.self, from: data)
             completion(decode)
         }
     }
@@ -36,6 +48,3 @@ class NetworkDataFetcher {
         }
     }
 }
-
-
-

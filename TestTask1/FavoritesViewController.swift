@@ -14,9 +14,6 @@ class FavoritesViewController: UIViewController {
     
     private var sideInset: CGFloat { return 30 }
     
-    
-
-    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -107,9 +104,11 @@ extension FavoritesViewController: UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let detailsVC = PicturesDetailsViewController()
-        let navController = UINavigationController(rootViewController: detailsVC)
-        self.present(navController, animated: true, completion: nil)
+
+//        let cell = tableView.cellForRow(at: indexPath) as! UITableViewCell
+//        let detailsVC = PicturesDetailsViewController(cell.unsplashPhoto)
+//        let navController = UINavigationController(rootViewController: detailsVC)
+//        self.present(navController, animated: true, completion: nil)
     }
 
 }

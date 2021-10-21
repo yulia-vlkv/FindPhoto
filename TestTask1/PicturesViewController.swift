@@ -15,7 +15,7 @@ class PicturesViewController: UIViewController {
     private var pictures = [UnsplashPhoto]()
     
     private var selectedImages = [UIImage]()
-    var savedImages = [UIImage]()
+//    var savedImages = [UnsplashPhoto]()
     
     private let itemsPerRow: CGFloat = 2
     private let sectionInserts = UIEdgeInsets(top: 20, left: 20, bottom: 20, right: 20)
@@ -66,8 +66,7 @@ class PicturesViewController: UIViewController {
     }
     
     @objc func addPicToFavs(){
-        savedImages = selectedImages
-        print(savedImages.count)
+//        print(savedImages.count)
     }
     
     private func setupSearchBar() {
@@ -94,7 +93,8 @@ extension PicturesViewController: UICollectionViewDataSource {
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let detailsVC = PicturesDetailsViewController()
+        let cell = picturesCollectionView.cellForItem(at: indexPath) as! PicturesCollectionViewCell
+        let detailsVC = PicturesDetailsViewController(picture: cell.unsplashPhoto)
         let navController = UINavigationController(rootViewController: detailsVC)
         self.present(navController, animated: true, completion: nil)
     }
