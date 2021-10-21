@@ -20,6 +20,7 @@
 		EFE64F1D271F3245009C8CC2 /* NetworkDataFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = EFE64F1C271F3245009C8CC2 /* NetworkDataFetcher.swift */; };
 		EFE64F1F271F32A6009C8CC2 /* SearchResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = EFE64F1E271F32A6009C8CC2 /* SearchResult.swift */; };
 		EFE64F21271F3D51009C8CC2 /* PicturesCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EFE64F20271F3D51009C8CC2 /* PicturesCollectionViewCell.swift */; };
+		EFE64F2327202284009C8CC2 /* PicturesDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EFE64F2227202284009C8CC2 /* PicturesDetailsViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -39,6 +40,7 @@
 		EFE64F1C271F3245009C8CC2 /* NetworkDataFetcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkDataFetcher.swift; sourceTree = "<group>"; };
 		EFE64F1E271F32A6009C8CC2 /* SearchResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResult.swift; sourceTree = "<group>"; };
 		EFE64F20271F3D51009C8CC2 /* PicturesCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PicturesCollectionViewCell.swift; sourceTree = "<group>"; };
+		EFE64F2227202284009C8CC2 /* PicturesDetailsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PicturesDetailsViewController.swift; sourceTree = "<group>"; };
 		FE0EDAF596FCBC9EA2453027 /* Pods_FindPhotos.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_FindPhotos.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -99,6 +101,7 @@
 				EFE64F1C271F3245009C8CC2 /* NetworkDataFetcher.swift */,
 				EFE64F1E271F32A6009C8CC2 /* SearchResult.swift */,
 				EFE64F15271EF242009C8CC2 /* PicturesViewController.swift */,
+				EFE64F2227202284009C8CC2 /* PicturesDetailsViewController.swift */,
 				EFE64F20271F3D51009C8CC2 /* PicturesCollectionViewCell.swift */,
 				EFE64F01271EE073009C8CC2 /* SceneDelegate.swift */,
 				EFE64F03271EE073009C8CC2 /* ViewController.swift */,
@@ -224,6 +227,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				EFE64F14271EE32B009C8CC2 /* MainTabBarController.swift in Sources */,
+				EFE64F2327202284009C8CC2 /* PicturesDetailsViewController.swift in Sources */,
 				EFE64F1F271F32A6009C8CC2 /* SearchResult.swift in Sources */,
 				EFE64F04271EE073009C8CC2 /* ViewController.swift in Sources */,
 				EFE64F16271EF242009C8CC2 /* PicturesViewController.swift in Sources */,

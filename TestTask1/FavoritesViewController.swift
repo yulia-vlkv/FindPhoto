@@ -12,18 +12,17 @@ class FavoritesViewController: UIViewController {
     let tableView = UITableView(frame: .zero, style: .grouped)
     let cellID = "cellID"
     
-    @available(*, unavailable)
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
+    private var sideInset: CGFloat { return 30 }
+    
+    
+
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
-//        tableView.dataSource = self
-//        tableView.delegate = self
-//        tableView.register(UITableViewCell.self, forCellReuseIdentifier: cellID)
-//        NotificationCenter.default.addObserver(self, selector: #selector(goToHabitsVC), name: NSNotification.Name(rawValue: "goToHabitsVC"), object: nil)
+        tableView.dataSource = self
+        tableView.delegate = self
+        tableView.register(UITableViewCell.self, forCellReuseIdentifier: cellID)
         
         setupNavigationBar()
         setupViews()
@@ -48,6 +47,9 @@ class FavoritesViewController: UIViewController {
     
     private func setupViews() {
         
+        view.backgroundColor = UIColor(named: "almostWhite")
+        tableView.backgroundColor = UIColor(named: "almostWhite")
+        
         view.addSubview(tableView)
         tableView.toAutoLayout()
         
@@ -55,8 +57,8 @@ class FavoritesViewController: UIViewController {
             
             tableView.topAnchor.constraint(equalTo: view.topAnchor),
             tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-            tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor)
+            tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: sideInset),
+            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -sideInset)
         ]
         
         NSLayoutConstraint.activate(constraints)
@@ -66,19 +68,48 @@ class FavoritesViewController: UIViewController {
 
 
 
-//extension FavoritesViewController: UITableViewDataSource {
-//    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-//        return 10
-//    }
-//
-//    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-//        return
-//    }
-//
-//
-//}
-//
-//extension FavoritesViewController: UITableViewDelegate {
-//
-//
-//}
+extension FavoritesViewController: UITableViewDataSource {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        // всегда одно
+        return 1
+    }
+
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        
+        let cell = tableView.dequeueReusableCell(withIdentifier: cellID, for: indexPath)
+        var content = cell.defaultContentConfiguration()
+        content.image = UIImage(systemName: "star")
+        content.text = "Author: "
+        cell.contentConfiguration = content
+        cell.backgroundColor = UIColor(named: "pastelSandy")
+        cell.clipsToBounds = true
+        cell.layer.cornerRadius = 15
+        cell.layer.borderColor = UIColor.clear.cgColor
+        return cell
+    }
+}
+
+extension FavoritesViewController: UITableViewDelegate {
+    
+    func numberOfSections(in tableView: UITableView) -> Int {
+        // = количество сохраненных фото
+        return 30
+    }
+    
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return 20
+    }
+    
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let headerView = UIView()
+        headerView.backgroundColor = .clear
+        return headerView
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let detailsVC = PicturesDetailsViewController()
+        let navController = UINavigationController(rootViewController: detailsVC)
+        self.present(navController, animated: true, completion: nil)
+    }
+
+}

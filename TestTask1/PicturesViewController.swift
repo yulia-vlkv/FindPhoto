@@ -15,6 +15,7 @@ class PicturesViewController: UIViewController {
     private var pictures = [UnsplashPhoto]()
     
     private var selectedImages = [UIImage]()
+    var savedImages = [UIImage]()
     
     private let itemsPerRow: CGFloat = 2
     private let sectionInserts = UIEdgeInsets(top: 20, left: 20, bottom: 20, right: 20)
@@ -65,7 +66,8 @@ class PicturesViewController: UIViewController {
     }
     
     @objc func addPicToFavs(){
-        
+        savedImages = selectedImages
+        print(savedImages.count)
     }
     
     private func setupSearchBar() {
@@ -92,18 +94,25 @@ extension PicturesViewController: UICollectionViewDataSource {
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let cell = picturesCollectionView.cellForItem(at: indexPath) as! PicturesCollectionViewCell
-        guard let image = cell.pictureImageView.image else { return }
-        selectedImages.append(image)
+        let detailsVC = PicturesDetailsViewController()
+        let navController = UINavigationController(rootViewController: detailsVC)
+        self.present(navController, animated: true, completion: nil)
     }
+        
     
-    func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
-        let cell = picturesCollectionView.cellForItem(at: indexPath) as! PicturesCollectionViewCell
-        guard let image = cell.pictureImageView.image else { return }
-        if let index = selectedImages.firstIndex(of: image) {
-            selectedImages.remove(at: index)
-        }
-    }
+//    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+//        let cell = picturesCollectionView.cellForItem(at: indexPath) as! PicturesCollectionViewCell
+//        guard let image = cell.pictureImageView.image else { return }
+//        selectedImages.append(image)
+//    }
+    
+//    func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
+//        let cell = picturesCollectionView.cellForItem(at: indexPath) as! PicturesCollectionViewCell
+//        guard let image = cell.pictureImageView.image else { return }
+//        if let index = selectedImages.firstIndex(of: image) {
+//            selectedImages.remove(at: index)
+//        }
+//    }
 }
 
 extension PicturesViewController:UICollectionViewDelegateFlowLayout {
@@ -149,5 +158,12 @@ extension PicturesViewController: UISearchBarDelegate {
 extension UIView {
     func toAutoLayout() {
         self.translatesAutoresizingMaskIntoConstraints = false
+    }
+}
+
+// MARK: addSubviews
+extension UIView {
+    func addSubviews(_ subviews: UIView...) {
+        subviews.forEach { addSubview($0) }
     }
 }
