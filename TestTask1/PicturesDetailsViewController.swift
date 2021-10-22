@@ -11,13 +11,19 @@ import SDWebImage
 class PicturesDetailsViewController: UIViewController {
     
     private let networkDataFetcher = NetworkDataFetcher()
+    public let realm = RealmDataBase()
     
-    private let picture: UnsplashPhoto
+//    private let picture: UnsplashPhoto
+    private let pictureID: String
+    private let pictureURL: String
+    
     private var pictureDetails: PictureDetails? {
         didSet {
             setInfo()
         }
     }
+    
+    private let picturesArray = RealmDataBase().getSavedPhotos()
     
     private let scrollView: UIScrollView = {
         let scroll = UIScrollView()
@@ -90,10 +96,11 @@ class PicturesDetailsViewController: UIViewController {
     
     private var sideInset: CGFloat { return 20 }
     
-    init(picture: UnsplashPhoto) {
-        self.picture = picture
+    init(pictureID: String, pictureURL: String) {
+        self.pictureURL = pictureURL
+        self.pictureID = pictureID
         super.init(nibName: nil, bundle: nil)
-        networkDataFetcher.fetchDetails(photoID: picture.id) { [weak self] details in
+        networkDataFetcher.fetchDetails(photoID: pictureID) { [weak self] details in
             self?.pictureDetails = details
         }
     }
@@ -109,30 +116,40 @@ class PicturesDetailsViewController: UIViewController {
     
         setupViews()
         setNavigationBar()
-
     }
     
     private func setNavigationBar(){
         self.navigationController?.navigationBar.tintColor = UIColor(named: "paleTeal")
         self.navigationController?.navigationBar.backgroundColor = UIColor(named: "pastelSandy")
         self.navigationItem.title = "Details"
-        self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Cancel", style: .plain, target: self, action: #selector(cancel))
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Save", style: .plain, target: self, action: #selector(save))
+        
+        if picturesArray.contains( where: { $0.id == pictureID } ) {
+            self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Cancel", style: .plain, target: self, action: #selector(cancel))
+            self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Delete", style: .plain, target: self, action: #selector(deleteImage))
+        } else {
+            self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Cancel", style: .plain, target: self, action: #selector(cancel))
+            self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Save", style: .plain, target: self, action: #selector(saveImage))
+        }
     }
     
     @objc private func cancel() {
         dismiss(animated: true, completion: nil)
     }
     
-    @objc private func save() {
-        savedImages.append(picture)
-        print(savedImages.count)
+    @objc private func saveImage() {
+        realm.savePhoto(id: pictureID, url: pictureURL)
+        cancel()
+    }
+    
+    @objc private func deleteImage() {
+        realm.deletePhoto(id: pictureID)
         cancel()
     }
     
     private func setInfo() {
         
         guard let picture = pictureDetails else { return }
+        
         imageView.sd_setImage(with: URL(string: picture.urls.regular), completed: nil)
         
         updateLabels(lable: authorLabel, text: authorLabel.text!, data: picture.user.name)
@@ -206,4 +223,9 @@ class PicturesDetailsViewController: UIViewController {
 
     }
     
+}
+
+
+protocol ReloadData {
+    func reloadData() -> Void
 }

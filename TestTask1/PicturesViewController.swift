@@ -14,9 +14,6 @@ class PicturesViewController: UIViewController {
     
     private var pictures = [UnsplashPhoto]()
     
-    private var selectedImages = [UIImage]()
-//    var savedImages = [UnsplashPhoto]()
-    
     private let itemsPerRow: CGFloat = 2
     private let sectionInserts = UIEdgeInsets(top: 20, left: 20, bottom: 20, right: 20)
     
@@ -32,6 +29,11 @@ class PicturesViewController: UIViewController {
         setupSearchBar()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(true)
+        picturesCollectionView.reloadData()
+    }
+    
     private func setupCollectionView(){
         view.addSubview(picturesCollectionView)
         picturesCollectionView.toAutoLayout()
@@ -41,7 +43,7 @@ class PicturesViewController: UIViewController {
         
         picturesCollectionView.dataSource = self
         picturesCollectionView.delegate = self
-        picturesCollectionView.register(PicturesCollectionViewCell.self, forCellWithReuseIdentifier: PicturesCollectionViewCell.reuseID)
+        picturesCollectionView.register(PicturesCollectionCell.self, forCellWithReuseIdentifier: PicturesCollectionCell.reuseID)
         
         let constraints = [
             picturesCollectionView.topAnchor.constraint(equalTo: view.topAnchor),
@@ -61,14 +63,10 @@ class PicturesViewController: UIViewController {
         appearance.configureWithOpaqueBackground()
         appearance.backgroundColor = UIColor(named: "pastelSandy")
         navigationController?.navigationBar.scrollEdgeAppearance = appearance
-        navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "plus.circle.fill"), style: .plain, target: self, action: #selector(addPicToFavs))
+//        navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "plus.circle.fill"), style: .plain, target: self, action: #selector(addPicToFavs))
         navigationController?.navigationBar.tintColor = UIColor(named: "paleTeal")
     }
-    
-    @objc func addPicToFavs(){
-//        print(savedImages.count)
-    }
-    
+
     private func setupSearchBar() {
         let searchController = UISearchController(searchResultsController: nil)
         navigationItem.searchController = searchController
@@ -86,15 +84,15 @@ extension PicturesViewController: UICollectionViewDataSource {
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PicturesCollectionViewCell.reuseID, for: indexPath) as! PicturesCollectionViewCell
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PicturesCollectionCell.reuseID, for: indexPath) as! PicturesCollectionCell
         let unspashPhoto = pictures[indexPath.item]
         cell.unsplashPhoto = unspashPhoto
         return cell
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let cell = picturesCollectionView.cellForItem(at: indexPath) as! PicturesCollectionViewCell
-        let detailsVC = PicturesDetailsViewController(picture: cell.unsplashPhoto)
+        let cell = picturesCollectionView.cellForItem(at: indexPath) as! PicturesCollectionCell
+        let detailsVC = PicturesDetailsViewController(pictureID: pictures[indexPath.item].id, pictureURL:  pictures[indexPath.item].urls.regular)
         let navController = UINavigationController(rootViewController: detailsVC)
         self.present(navController, animated: true, completion: nil)
     }
