@@ -44,7 +44,7 @@ class PicturesDetailsViewController: UIViewController {
     
     private let imageView: UIImageView = {
         let image = UIImageView()
-        image.backgroundColor = .lightGray
+        image.backgroundColor = .clear
         image.layer.cornerRadius = 15
         image.toAutoLayout()
         return image
@@ -54,7 +54,7 @@ class PicturesDetailsViewController: UIViewController {
         let label = UILabel()
         label.text = "Author: "
         label.font = UIFont.systemFont(ofSize: 18)
-        label.backgroundColor = .lightGray
+        label.backgroundColor = .clear
         label.toAutoLayout()
         return label
     }()
@@ -63,7 +63,7 @@ class PicturesDetailsViewController: UIViewController {
         let label = UILabel()
         label.text = "Date: "
         label.font = UIFont.systemFont(ofSize: 18)
-        label.backgroundColor = .lightGray
+        label.backgroundColor = .clear
         label.toAutoLayout()
         return label
     }()
@@ -72,7 +72,7 @@ class PicturesDetailsViewController: UIViewController {
         let label = UILabel()
         label.text = "Location: "
         label.font = UIFont.systemFont(ofSize: 18)
-        label.backgroundColor = .lightGray
+        label.backgroundColor = .clear
         label.toAutoLayout()
         return label
     }()
@@ -81,7 +81,7 @@ class PicturesDetailsViewController: UIViewController {
         let label = UILabel()
         label.text = "Downloads: "
         label.font = UIFont.systemFont(ofSize: 18)
-        label.backgroundColor = .lightGray
+        label.backgroundColor = .clear
         label.toAutoLayout()
         return label
     }()
@@ -131,19 +131,46 @@ class PicturesDetailsViewController: UIViewController {
     }
     
     private func setInfo() {
+        
         guard let picture = pictureDetails else { return }
         imageView.sd_setImage(with: URL(string: picture.urls.regular), completed: nil)
-        authorLabel.text = picture.user.name
+        
+        updateLabels(lable: authorLabel, text: authorLabel.text!, data: picture.user.name)
+        
+        let dateGet = DateFormatter()
+        dateGet.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
+        let datePrint = DateFormatter()
+        datePrint.dateFormat = "MMM d, yyyy"
+        if let date = dateGet.date(from: picture.created_at){
+            let finalDate = datePrint.string(from: date)
+            updateLabels(lable: uploadeDateLabel, text: uploadeDateLabel.text!, data: finalDate)
+        } else {
+            print("An error while decoding the date string")
+        }
+        
+        updateLabels(lable: downloadCountLabel, text: downloadCountLabel.text!, data: String(picture.downloads))
+        
+        if picture.location.city != nil && picture.location.country != nil {
+            updateLabels(lable: locationLabel, text: locationLabel.text!, data: "\(picture.location.city!), \(picture.location.country!)")
+        } else if picture.location.city != nil {
+            updateLabels(lable: locationLabel, text: locationLabel.text!, data: "\(picture.location.city!)")
+        } else if picture.location.country != nil {
+                updateLabels(lable: locationLabel, text: locationLabel.text!, data: "\(picture.location.country!)")
+        } else {
+            updateLabels(lable: locationLabel, text: locationLabel.text!, data: " - ")
+        }
     }
-    
-//    var unsplashPhoto: UnsplashPhoto! {
-//        didSet {
-//            let photoURL = unsplashPhoto.urls["regular"]
-//            guard let imageURL = photoURL, let url = URL(string: imageURL) else { return }
-//
-//            pictureImageView.sd_setImage(with: url, completed: nil)
-//        }
-//    }
+        
+    func updateLabels(lable: UILabel, text: String, data: String) {
+        let fontA = UIFont.systemFont(ofSize: 20, weight: .regular)
+        let attributesA = [NSAttributedString.Key.font: fontA]
+        let textStr = NSMutableAttributedString(string: text, attributes: attributesA)
+        let fontB = UIFont.systemFont(ofSize: 20, weight: .semibold)
+        let attributesB = [NSAttributedString.Key.font: fontB]
+        let dataStr = NSMutableAttributedString(string: data, attributes: attributesB)
+        textStr.append(dataStr)
+        lable.attributedText = textStr
+    }
     
     private func setupViews() {
         

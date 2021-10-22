@@ -26,5 +26,4 @@ struct Location: Codable {
     let country: String?
 }
 
-
 var savedImages = [UnsplashPhoto]()
