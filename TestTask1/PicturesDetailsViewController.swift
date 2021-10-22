@@ -13,9 +13,12 @@ class PicturesDetailsViewController: UIViewController {
     private let networkDataFetcher = NetworkDataFetcher()
     public let realm = RealmDataBase()
     
+//    var delegate: ReloadData?
+    
 //    private let picture: UnsplashPhoto
     private let pictureID: String
     private let pictureURL: String
+    private let pictureAuthor: String
     
     private var pictureDetails: PictureDetails? {
         didSet {
@@ -96,9 +99,10 @@ class PicturesDetailsViewController: UIViewController {
     
     private var sideInset: CGFloat { return 20 }
     
-    init(pictureID: String, pictureURL: String) {
+    init(pictureID: String, pictureURL: String, pictureAuthor: String) {
         self.pictureURL = pictureURL
         self.pictureID = pictureID
+        self.pictureAuthor = pictureAuthor
         super.init(nibName: nil, bundle: nil)
         networkDataFetcher.fetchDetails(photoID: pictureID) { [weak self] details in
             self?.pictureDetails = details
@@ -111,6 +115,7 @@ class PicturesDetailsViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+//        modalPresentationCapturesStatusBarAppearance = true
         
         self.view.backgroundColor = UIColor(named: "almostWhite")
     
@@ -119,9 +124,12 @@ class PicturesDetailsViewController: UIViewController {
     }
     
     private func setNavigationBar(){
+//        self.modalPresentationCapturesStatusBarAppearance = true
         self.navigationController?.navigationBar.tintColor = UIColor(named: "paleTeal")
         self.navigationController?.navigationBar.backgroundColor = UIColor(named: "pastelSandy")
         self.navigationItem.title = "Details"
+//        self.navigationController?.navigationBar.prefersLargeTitles = false
+        self.navigationController?.navigationBar.isHidden = false
         
         if picturesArray.contains( where: { $0.id == pictureID } ) {
             self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Cancel", style: .plain, target: self, action: #selector(cancel))
@@ -137,12 +145,16 @@ class PicturesDetailsViewController: UIViewController {
     }
     
     @objc private func saveImage() {
-        realm.savePhoto(id: pictureID, url: pictureURL)
+        realm.savePhoto(id: pictureID, url: pictureURL, author: pictureAuthor)
         cancel()
+//        guard delegate != nil else { return }
+//        delegate!.reloadData()
     }
     
     @objc private func deleteImage() {
+//        guard delegate != nil else { return }
         realm.deletePhoto(id: pictureID)
+//        delegate!.reloadData()
         cancel()
     }
     
@@ -223,9 +235,4 @@ class PicturesDetailsViewController: UIViewController {
 
     }
     
-}
-
-
-protocol ReloadData {
-    func reloadData() -> Void
 }

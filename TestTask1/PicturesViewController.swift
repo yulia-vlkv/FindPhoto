@@ -9,6 +9,17 @@ import UIKit
 
 class PicturesViewController: UIViewController {
     
+//    private let coordinator: Coordinator
+//    
+//    init(coordinator: Coordinator) {
+//        self.coordinator = coordinator
+//        super.init(nibName: nil, bundle: nil)
+//    }
+//    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     var networkDataFetcher = NetworkDataFetcher()
     private var timer: Timer?
     
@@ -29,10 +40,6 @@ class PicturesViewController: UIViewController {
         setupSearchBar()
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(true)
-        picturesCollectionView.reloadData()
-    }
     
     private func setupCollectionView(){
         view.addSubview(picturesCollectionView)
@@ -91,8 +98,9 @@ extension PicturesViewController: UICollectionViewDataSource {
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let cell = picturesCollectionView.cellForItem(at: indexPath) as! PicturesCollectionCell
-        let detailsVC = PicturesDetailsViewController(pictureID: pictures[indexPath.item].id, pictureURL:  pictures[indexPath.item].urls.regular)
+//        coordinator.showDetailedViewController(photoId: pictures[indexPath.item].id, profileImageUrl: pictures[indexPath.item].urls.regular)
+//        let cell = picturesCollectionView.cellForItem(at: indexPath) as! PicturesCollectionCell
+        let detailsVC = PicturesDetailsViewController(pictureID: pictures[indexPath.item].id, pictureURL:  pictures[indexPath.item].urls.regular, pictureAuthor: pictures[indexPath.item].user.name)
         let navController = UINavigationController(rootViewController: detailsVC)
         self.present(navController, animated: true, completion: nil)
     }

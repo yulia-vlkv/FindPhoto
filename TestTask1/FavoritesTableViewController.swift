@@ -6,41 +6,92 @@
 //
 
 import UIKit
+import RealmSwift
 import SDWebImage
 
 class FavoritesTableViewController: UIViewController {
     
+    private var notificationToken: NotificationToken? = nil
+    
+//    private let coordinator: Coordinator
+//
+//    init(coordinator: Coordinator) {
+//        self.coordinator = coordinator
+//        super.init(nibName: nil, bundle: nil)
+//    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     static let reuseID = "cellID"
     
-    private let favoritesTableView: UITableView = {
+    private var favoritesTableView: UITableView = {
         let tableView = UITableView()
         tableView.backgroundColor = UIColor(named: "almostWhite")
         tableView.toAutoLayout()
         return tableView
     }()
     
-    private let realm = RealmDataBase()
+    private let myrealm = RealmDataBase()
     private var favoritePhotos = [PhotoRealmObject]()
+
     
     private var sideInset: CGFloat { return 30 }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        favoritePhotos = realm.getSavedPhotos()
-
+        favoritePhotos = myrealm.getSavedPhotos()
+        
         favoritesTableView.register(FavoritesTableViewCell.self, forCellReuseIdentifier: FavoritesTableViewController.reuseID)
         favoritesTableView.dataSource = self
         favoritesTableView.delegate = self
         
         setupNavigationBar()
         setupViews()
+        observeAndUpdate()
 
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        self.favoritesTableView.reloadData()
+    private func observeAndUpdate(){
+        let realm = try! Realm()
+        let results = realm.objects(PhotoRealmObject.self)
+        
+        notificationToken = results.observe { [weak self] (changes: RealmCollectionChange) in
+            guard let tableView = self?.favoritesTableView else { return }
+            switch changes {
+            case .initial:
+                tableView.reloadData()
+            case .update(_, let deletions, let insertions, let modifications):
+                       // Query results have changed, so apply them to the UITableView
+                tableView.beginUpdates()
+                       // Always apply updates in the following order: deletions, insertions, then modifications.
+                       // Handling insertions before deletions may result in unexpected behavior.
+                self?.favoritePhotos = (self?.myrealm.getSavedPhotos())!
+                tableView.deleteRows(at: deletions.map({ IndexPath(row: $0, section: 0)}),
+                                            with: .automatic)
+                tableView.insertRows(at: insertions.map({ IndexPath(row: $0, section: 0) }),
+                                            with: .automatic)
+                tableView.reloadRows(at: modifications.map({ IndexPath(row: $0, section: 0) }),
+                                            with: .automatic)
+                tableView.endUpdates()
+                       
+            case .error(let error):
+                       // An error occurred while opening the Realm file on the background worker thread
+                fatalError("\(error)")
+                   }
+               }
     }
+    
+    deinit {
+        notificationToken?.invalidate()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        favoritesTableView.reloadData()
+    }
+
     
     private func setupNavigationBar() {
         let appearance = UINavigationBarAppearance()
@@ -100,13 +151,16 @@ extension FavoritesTableViewController: UITableViewDataSource, UITableViewDelega
 //    }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let detailsVC = PicturesDetailsViewController(pictureID: favoritePhotos[indexPath.item].id, pictureURL: favoritePhotos[indexPath.item].url)
+//        coordinator.showDetailedViewController(photoId: favoritePhotos[indexPath.item].id, profileImageUrl: favoritePhotos[indexPath.item].url)
+        let detailsVC = PicturesDetailsViewController(pictureID: favoritePhotos[indexPath.item].id, pictureURL: favoritePhotos[indexPath.item].url, pictureAuthor: favoritePhotos[indexPath.item].author)
         let navController = UINavigationController(rootViewController: detailsVC)
         self.present(navController, animated: true, completion: nil)
         favoritesTableView.reloadData()
         
+        
     }
     
+
 //    func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
 //        favoritesTableView.reloadData()
 //    }
@@ -129,3 +183,9 @@ extension FavoritesTableViewController: UITableViewDataSource, UITableViewDelega
         return headerView
     }
 }
+
+//extension FavoritesTableViewController: ReloadData {
+//    func reloadData() {
+//        favoritesTableView.reloadData()
+//    }
+//}

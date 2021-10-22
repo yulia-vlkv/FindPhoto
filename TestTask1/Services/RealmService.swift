@@ -11,11 +11,13 @@ import RealmSwift
 class PhotoRealmObject: Object {
     @Persisted var id: String
     @Persisted var url: String
+    @Persisted var author: String
     
-    convenience init(id: String, url: String) {
+    convenience init(id: String, url: String, author: String) {
         self.init()
         self.id = id
         self.url = url
+        self.author = author
     }
 }
 
@@ -23,8 +25,8 @@ class RealmDataBase {
     
     private let realm = try! Realm()
     
-    func savePhoto (id: String, url: String) {
-        let photo = PhotoRealmObject(id: id, url: url)
+    func savePhoto (id: String, url: String, author: String) {
+        let photo = PhotoRealmObject(id: id, url: url, author: author)
         try! realm.write {
             realm.add(photo)
         }

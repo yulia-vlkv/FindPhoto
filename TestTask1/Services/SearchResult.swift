@@ -16,6 +16,7 @@ struct UnsplashPhoto: Decodable {
     let height: Int
     let urls: URLs
     let id: String
+    let user: User
 }
 
 struct URLs: Codable {
