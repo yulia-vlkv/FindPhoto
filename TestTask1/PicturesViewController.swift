@@ -29,8 +29,7 @@ class PicturesViewController: UIViewController {
     private let sectionInserts = UIEdgeInsets(top: 20, left: 20, bottom: 20, right: 20)
     
     private let layout = UICollectionViewFlowLayout()
-    private lazy var picturesCollectionView = UICollectionView(frame: .zero,
-                                                          collectionViewLayout: layout)
+    private lazy var picturesCollectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -71,7 +70,7 @@ class PicturesViewController: UIViewController {
         appearance.backgroundColor = UIColor(named: "pastelSandy")
         navigationController?.navigationBar.scrollEdgeAppearance = appearance
 //        navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "plus.circle.fill"), style: .plain, target: self, action: #selector(addPicToFavs))
-        navigationController?.navigationBar.tintColor = UIColor(named: "paleTeal")
+        navigationController?.navigationBar.tintColor = UIColor(named: "dustyTeal")
     }
 
     private func setupSearchBar() {
@@ -80,6 +79,8 @@ class PicturesViewController: UIViewController {
         searchController.hidesNavigationBarDuringPresentation = false
         searchController.searchBar.delegate = self
     }
+    
+    
 
 }
 
@@ -104,6 +105,7 @@ extension PicturesViewController: UICollectionViewDataSource {
         let navController = UINavigationController(rootViewController: detailsVC)
         self.present(navController, animated: true, completion: nil)
     }
+
         
     
 //    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
@@ -127,7 +129,8 @@ extension PicturesViewController:UICollectionViewDelegateFlowLayout {
         let picture = pictures[indexPath.item]
         let paddingSpace = sectionInserts.left * (itemsPerRow + 1)
         let widthPerItem = ( view.frame.width - paddingSpace ) / itemsPerRow
-        let height = CGFloat(picture.height) * widthPerItem / CGFloat(picture.width)
+//        let height = CGFloat(picture.height) * widthPerItem / CGFloat(picture.width)
+        let height = widthPerItem
         return CGSize(width: widthPerItem, height: height)
     }
     
@@ -138,6 +141,7 @@ extension PicturesViewController:UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
         return sectionInserts.left
     }
+
 }
 
 // MARK: UISearchBarDelegate

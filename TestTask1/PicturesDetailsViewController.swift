@@ -116,7 +116,6 @@ class PicturesDetailsViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 //        modalPresentationCapturesStatusBarAppearance = true
-        
         self.view.backgroundColor = UIColor(named: "almostWhite")
     
         setupViews()
@@ -125,7 +124,8 @@ class PicturesDetailsViewController: UIViewController {
     
     private func setNavigationBar(){
 //        self.modalPresentationCapturesStatusBarAppearance = true
-        self.navigationController?.navigationBar.tintColor = UIColor(named: "paleTeal")
+        self.navigationController?.navigationBar.tintColor = UIColor(named: "dustyTeal")
+        
         self.navigationController?.navigationBar.backgroundColor = UIColor(named: "pastelSandy")
         self.navigationItem.title = "Details"
 //        self.navigationController?.navigationBar.prefersLargeTitles = false
@@ -133,7 +133,7 @@ class PicturesDetailsViewController: UIViewController {
         
         if picturesArray.contains( where: { $0.id == pictureID } ) {
             self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Cancel", style: .plain, target: self, action: #selector(cancel))
-            self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Delete", style: .plain, target: self, action: #selector(deleteImage))
+            self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Delete", style: .plain, target: self, action: #selector(showAlert))
         } else {
             self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Cancel", style: .plain, target: self, action: #selector(cancel))
             self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Save", style: .plain, target: self, action: #selector(saveImage))
@@ -149,6 +149,26 @@ class PicturesDetailsViewController: UIViewController {
         cancel()
 //        guard delegate != nil else { return }
 //        delegate!.reloadData()
+    }
+    
+    @objc private func showAlert() {
+        let alertController = UIAlertController(title: "Delete Image", message: "You Sure?", preferredStyle: .alert)
+        let cancel = UIAlertAction(title: "Cancel", style: .cancel)
+        let confirm = UIAlertAction(title: "Delete", style: .default) { (action: UIAlertAction) in
+            self.deleteImage()
+        }
+
+//        let confirm = UIAlertAction(title: "Удалить", style: .default) { (action:UIAlertAction) in
+//            HabitsStore.shared.habits.removeAll{$0 == self.habit}
+//            NotificationCenter.default.post(name: NSNotification.Name(rawValue: "goToHabitsVC"), object: nil)
+//            self.dismiss(animated: true, completion: {
+//                let mainHabbitVC = HabitViewController ()
+//                self.present(mainHabbitVC, animated: true, completion: nil)
+//            })
+//        }
+        alertController.addAction(cancel)
+        alertController.addAction(confirm)
+        self.present(alertController, animated: true, completion: nil)
     }
     
     @objc private func deleteImage() {

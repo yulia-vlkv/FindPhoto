@@ -20,6 +20,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         window?.rootViewController = tabBarController
         window?.makeKeyAndVisible()
         window?.windowScene = windowScene
+        UIView.appearance(whenContainedInInstancesOf: [UIAlertController.self]).tintColor = UIColor(named: "dustyTeal")
     }
 
     func sceneDidDisconnect(_ scene: UIScene) {

@@ -104,7 +104,7 @@ class FavoritesTableViewController: UIViewController {
         appearance.configureWithOpaqueBackground()
         appearance.backgroundColor = UIColor(named: "pastelSandy")
         navigationController?.navigationBar.scrollEdgeAppearance = appearance
-        navigationController?.navigationBar.tintColor = UIColor(named: "paleTeal")
+        navigationController?.navigationBar.tintColor = UIColor(named: "dustyTeal")
     }
     
     

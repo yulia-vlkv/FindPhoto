@@ -12,12 +12,12 @@ class PicturesCollectionCell: UICollectionViewCell {
     
     static let reuseID = "PictureCell"
     
-    private let checkmark: UIImageView = {
-        let image = UIImageView(image: UIImage(named: "checkmark"))
-        image.toAutoLayout()
-        image.alpha = 0
-        return image
-    }()
+//    private let checkmark: UIImageView = {
+//        let image = UIImageView(image: UIImage(named: "checkmark"))
+//        image.toAutoLayout()
+//        image.alpha = 0
+//        return image
+//    }()
     
     var unsplashPhoto: UnsplashPhoto! {
         didSet {
@@ -28,17 +28,18 @@ class PicturesCollectionCell: UICollectionViewCell {
         }
     }
     
-    override var isSelected: Bool {
-        didSet {
-            updateForSelectedState()
-        }
-    }
+//    override var isSelected: Bool {
+//        didSet {
+//            updateForSelectedState()
+//        }
+//    }
     
     let pictureImageView: UIImageView = {
         let image = UIImageView()
         image.toAutoLayout()
-        image.backgroundColor = .cyan
-        image.contentMode = .scaleAspectFill
+        image.backgroundColor = .clear
+        image.contentMode = .scaleToFill
+        
         return image
     }()
     
@@ -47,17 +48,17 @@ class PicturesCollectionCell: UICollectionViewCell {
         pictureImageView.image = nil
     }
     
-    private func updateForSelectedState() {
-        pictureImageView.alpha = isSelected ?  0.8 : 1
-        checkmark.alpha = isSelected ? 1 : 0
-    }
+//    private func updateForSelectedState() {
+//        pictureImageView.alpha = isSelected ?  0.8 : 1
+//        checkmark.alpha = isSelected ? 1 : 0
+//    }
     
     override init(frame: CGRect) {
         super.init(frame: frame)
         
-        updateForSelectedState()
+//        updateForSelectedState()
         setupPicturesImageView()
-        setupCheckmark()
+//        setupCheckmark()
     }
     
     private func setupPicturesImageView() {
@@ -73,16 +74,16 @@ class PicturesCollectionCell: UICollectionViewCell {
         NSLayoutConstraint.activate(constraints)
     }
     
-    private func setupCheckmark() {
-        addSubview(checkmark)
-        
-        let constraints = [
-            checkmark.bottomAnchor.constraint(equalTo: pictureImageView.bottomAnchor, constant: -8 ),
-            checkmark.trailingAnchor.constraint(equalTo: pictureImageView.trailingAnchor, constant: -8 )
-        ]
-
-        NSLayoutConstraint.activate(constraints)
-    }
+//    private func setupCheckmark() {
+//        addSubview(checkmark)
+//
+//        let constraints = [
+//            checkmark.bottomAnchor.constraint(equalTo: pictureImageView.bottomAnchor, constant: -8 ),
+//            checkmark.trailingAnchor.constraint(equalTo: pictureImageView.trailingAnchor, constant: -8 )
+//        ]
+//
+//        NSLayoutConstraint.activate(constraints)
+//    }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")

@@ -13,7 +13,7 @@ class MainTabBarController: UITabBarController, UITabBarControllerDelegate {
         super.viewDidLoad()
         
         tabBar.backgroundColor = UIColor(named: "pastelSandy")
-        tabBar.tintColor = UIColor(named: "paleTeal")
+        tabBar.tintColor = UIColor(named: "dustyTeal")
         delegate = self
         setupTabBar()
     }
