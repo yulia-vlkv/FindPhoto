@@ -13,9 +13,6 @@ class PicturesDetailsViewController: UIViewController {
     private let networkDataFetcher = NetworkDataFetcher()
     public let realm = RealmDataBase()
     
-//    var delegate: ReloadData?
-    
-//    private let picture: UnsplashPhoto
     private let pictureID: String
     private let pictureURL: String
     private let pictureAuthor: String
@@ -96,7 +93,6 @@ class PicturesDetailsViewController: UIViewController {
     }()
     
     private var topBottomInset: CGFloat { return 30}
-    
     private var sideInset: CGFloat { return 20 }
     
     init(pictureID: String, pictureURL: String, pictureAuthor: String) {
@@ -115,7 +111,7 @@ class PicturesDetailsViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-//        modalPresentationCapturesStatusBarAppearance = true
+
         self.view.backgroundColor = UIColor(named: "almostWhite")
     
         setupViews()
@@ -123,12 +119,10 @@ class PicturesDetailsViewController: UIViewController {
     }
     
     private func setNavigationBar(){
-//        self.modalPresentationCapturesStatusBarAppearance = true
         self.navigationController?.navigationBar.tintColor = UIColor(named: "dustyTeal")
         
         self.navigationController?.navigationBar.backgroundColor = UIColor(named: "pastelSandy")
         self.navigationItem.title = "Details"
-//        self.navigationController?.navigationBar.prefersLargeTitles = false
         self.navigationController?.navigationBar.isHidden = false
         
         if picturesArray.contains( where: { $0.id == pictureID } ) {
@@ -147,8 +141,6 @@ class PicturesDetailsViewController: UIViewController {
     @objc private func saveImage() {
         realm.savePhoto(id: pictureID, url: pictureURL, author: pictureAuthor)
         cancel()
-//        guard delegate != nil else { return }
-//        delegate!.reloadData()
     }
     
     @objc private func showAlert() {
@@ -157,27 +149,17 @@ class PicturesDetailsViewController: UIViewController {
         let confirm = UIAlertAction(title: "Delete", style: .default) { (action: UIAlertAction) in
             self.deleteImage()
         }
-
-//        let confirm = UIAlertAction(title: "Удалить", style: .default) { (action:UIAlertAction) in
-//            HabitsStore.shared.habits.removeAll{$0 == self.habit}
-//            NotificationCenter.default.post(name: NSNotification.Name(rawValue: "goToHabitsVC"), object: nil)
-//            self.dismiss(animated: true, completion: {
-//                let mainHabbitVC = HabitViewController ()
-//                self.present(mainHabbitVC, animated: true, completion: nil)
-//            })
-//        }
         alertController.addAction(cancel)
         alertController.addAction(confirm)
         self.present(alertController, animated: true, completion: nil)
     }
     
     @objc private func deleteImage() {
-//        guard delegate != nil else { return }
         realm.deletePhoto(id: pictureID)
-//        delegate!.reloadData()
         cancel()
     }
     
+    // MARK: func to assign picture values to labels
     private func setInfo() {
         
         guard let picture = pictureDetails else { return }
@@ -252,28 +234,6 @@ class PicturesDetailsViewController: UIViewController {
         ]
 
         NSLayoutConstraint.activate(constraints)
-
     }
     
-}
-
-
-class ScaledHeightImageView: UIImageView {
-
-    override var intrinsicContentSize: CGSize {
-
-        if let myImage = self.image {
-            let myImageWidth = myImage.size.width
-            let myImageHeight = myImage.size.height
-            let myViewWidth = self.frame.size.width
- 
-            let ratio = myViewWidth/myImageWidth
-            let scaledHeight = myImageHeight * ratio
-
-            return CGSize(width: myViewWidth, height: scaledHeight)
-        }
-
-        return CGSize(width: -1.0, height: -1.0)
-    }
-
 }

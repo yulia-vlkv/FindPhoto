@@ -9,17 +9,6 @@ import UIKit
 
 class PicturesViewController: UIViewController {
     
-//    private let coordinator: Coordinator
-//    
-//    init(coordinator: Coordinator) {
-//        self.coordinator = coordinator
-//        super.init(nibName: nil, bundle: nil)
-//    }
-//    
-//    required init?(coder: NSCoder) {
-//        fatalError("init(coder:) has not been implemented")
-//    }
-    
     var networkDataFetcher = NetworkDataFetcher()
     private var timer: Timer?
     
@@ -34,11 +23,19 @@ class PicturesViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        getRandomPictures()
         setupNavigationBar()
         setupCollectionView()
         setupSearchBar()
     }
     
+    private func getRandomPictures(){
+        networkDataFetcher.fetchRandomImages { [weak self] randomResults in
+            guard let fetchedPhotos = randomResults else { return }
+            self?.pictures = fetchedPhotos
+            self?.picturesCollectionView.reloadData()
+        }
+    }
     
     private func setupCollectionView(){
         view.addSubview(picturesCollectionView)
@@ -69,7 +66,6 @@ class PicturesViewController: UIViewController {
         appearance.configureWithOpaqueBackground()
         appearance.backgroundColor = UIColor(named: "pastelSandy")
         navigationController?.navigationBar.scrollEdgeAppearance = appearance
-//        navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "plus.circle.fill"), style: .plain, target: self, action: #selector(addPicToFavs))
         navigationController?.navigationBar.tintColor = UIColor(named: "dustyTeal")
     }
 
@@ -80,13 +76,11 @@ class PicturesViewController: UIViewController {
         searchController.searchBar.delegate = self
     }
     
-    
-
 }
 
 // MARK: UICollectionViewDataSource, UICollectionViewDelegateFlowLayout
 
-extension PicturesViewController: UICollectionViewDataSource {
+extension PicturesViewController: UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return pictures.count
     }
@@ -99,37 +93,14 @@ extension PicturesViewController: UICollectionViewDataSource {
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-//        coordinator.showDetailedViewController(photoId: pictures[indexPath.item].id, profileImageUrl: pictures[indexPath.item].urls.regular)
-//        let cell = picturesCollectionView.cellForItem(at: indexPath) as! PicturesCollectionCell
         let detailsVC = PicturesDetailsViewController(pictureID: pictures[indexPath.item].id, pictureURL:  pictures[indexPath.item].urls.regular, pictureAuthor: pictures[indexPath.item].user.name)
         let navController = UINavigationController(rootViewController: detailsVC)
         self.present(navController, animated: true, completion: nil)
     }
-
-        
-    
-//    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-//        let cell = picturesCollectionView.cellForItem(at: indexPath) as! PicturesCollectionViewCell
-//        guard let image = cell.pictureImageView.image else { return }
-//        selectedImages.append(image)
-//    }
-    
-//    func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
-//        let cell = picturesCollectionView.cellForItem(at: indexPath) as! PicturesCollectionViewCell
-//        guard let image = cell.pictureImageView.image else { return }
-//        if let index = selectedImages.firstIndex(of: image) {
-//            selectedImages.remove(at: index)
-//        }
-//    }
-}
-
-extension PicturesViewController:UICollectionViewDelegateFlowLayout {
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let picture = pictures[indexPath.item]
         let paddingSpace = sectionInserts.left * (itemsPerRow + 1)
         let widthPerItem = ( view.frame.width - paddingSpace ) / itemsPerRow
-//        let height = CGFloat(picture.height) * widthPerItem / CGFloat(picture.width)
         let height = widthPerItem
         return CGSize(width: widthPerItem, height: height)
     }
@@ -157,23 +128,8 @@ extension PicturesViewController: UISearchBarDelegate {
                 guard let fetchedPhotos = searchResults else { return }
                 self?.pictures = fetchedPhotos.results
                 self?.picturesCollectionView.reloadData()
-            
             }
         })
     }
-}
-
-// MARK: toAutoLayout
-
-extension UIView {
-    func toAutoLayout() {
-        self.translatesAutoresizingMaskIntoConstraints = false
-    }
-}
-
-// MARK: addSubviews
-extension UIView {
-    func addSubviews(_ subviews: UIView...) {
-        subviews.forEach { addSubview($0) }
-    }
+    
 }

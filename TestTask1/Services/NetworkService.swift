@@ -10,7 +10,6 @@ import Foundation
 class NetworkService {
     
     func request(searchTerm: String, completion: @escaping (Data?, Error?) -> Void)  {
-        
         let parameters = self.setParameters(searchTerm: searchTerm)
         let url = self.url(mainParameters: parameters)
         var request = URLRequest(url: url)
@@ -23,6 +22,15 @@ class NetworkService {
     func detailsRequest(photoID: String, completion: @escaping (Data?, Error?) -> Void)  {
         
         let url = self.pictureUrl(photoID: photoID)
+        var request = URLRequest(url: url)
+        request.allHTTPHeaderFields = prepareHeader()
+        request.httpMethod = "get"
+        let task = createDataTask(from: request, completion: completion)
+        task.resume()
+    }
+    
+    func randomRequest(completion: @escaping (Data?, Error?) -> Void){
+        let url = self.randomPictureUrl()
         var request = URLRequest(url: url)
         request.allHTTPHeaderFields = prepareHeader()
         request.httpMethod = "get"
@@ -58,6 +66,14 @@ class NetworkService {
         components.scheme = "https"
         components.host = "api.unsplash.com"
         components.path = "/photos/\(photoID)"
+        return components.url!
+    }
+    
+    private func randomPictureUrl() -> URL {
+        var components = URLComponents()
+        components.scheme = "https"
+        components.host = "api.unsplash.com"
+        components.path = "/photos"
         return components.url!
     }
     
