@@ -20,9 +20,11 @@ class FavoritesTableViewController: UIViewController {
 //        super.init(nibName: nil, bundle: nil)
 //    }
     
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
+//
+//    
+//    required init?(coder: NSCoder) {
+//        fatalError("init(coder:) has not been implemented")
+//    }
     
     static let reuseID = "cellID"
     
@@ -30,6 +32,7 @@ class FavoritesTableViewController: UIViewController {
         let tableView = UITableView()
         tableView.backgroundColor = UIColor(named: "almostWhite")
         tableView.toAutoLayout()
+        tableView.separatorStyle = .none
         return tableView
     }()
     
@@ -55,7 +58,7 @@ class FavoritesTableViewController: UIViewController {
     }
     
     private func observeAndUpdate(){
-        let realm = try! Realm()
+        lazy var realm = try! Realm()
         let results = realm.objects(PhotoRealmObject.self)
         
         notificationToken = results.observe { [weak self] (changes: RealmCollectionChange) in
@@ -132,7 +135,13 @@ extension FavoritesTableViewController: UITableViewDataSource, UITableViewDelega
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        
+        
         let cell = tableView.dequeueReusableCell(withIdentifier: FavoritesTableViewController.reuseID) as! FavoritesTableViewCell
+        cell.backgroundColor = UIColor(named: "almostWhite")
+//        cell.clipsToBounds = true
+//        cell.layer.cornerRadius = 15
+//        cell.layer.borderColor = UIColor.clear.cgColor
         cell.photo = favoritePhotos[indexPath.item]
         return cell
     }
@@ -140,11 +149,6 @@ extension FavoritesTableViewController: UITableViewDataSource, UITableViewDelega
 //    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 //
 //        let cell = tableView.dequeueReusableCell(withIdentifier: "cellID") as! FavoritesTableViewCell
-
-//        cell.backgroundColor = UIColor(named: "pastelSandy")
-//        cell.clipsToBounds = true
-//        cell.layer.cornerRadius = 15
-//        cell.layer.borderColor = UIColor.clear.cgColor
         
 //        cell.photo = favoritePhotos[indexPath.item]
 //        return cell
@@ -160,6 +164,7 @@ extension FavoritesTableViewController: UITableViewDataSource, UITableViewDelega
         
     }
     
+    
 
 //    func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
 //        favoritesTableView.reloadData()
@@ -168,13 +173,13 @@ extension FavoritesTableViewController: UITableViewDataSource, UITableViewDelega
 //    func numberOfSections(in tableView: UITableView) -> Int {
 //        return favoritePhotos.count
 //    }
-    
-//    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-//        return 20
-//    }
+//
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return 20
+    }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 80
+        return 90
     }
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
@@ -182,6 +187,8 @@ extension FavoritesTableViewController: UITableViewDataSource, UITableViewDelega
         headerView.backgroundColor = .clear
         return headerView
     }
+    
+    
 }
 
 //extension FavoritesTableViewController: ReloadData {

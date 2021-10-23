@@ -18,15 +18,24 @@ class FavoritesTableViewCell: UITableViewCell {
     }
     
     private func setCell() {
-        authorLabel.text = "by \(photo.id)"
+        authorLabel.text = "by \(photo.author)"
         image.sd_setImage(with: URL(string: photo.url), completed: nil)
     }
+    
+    private let backgroundLabel: UILabel = {
+        let lable = UILabel()
+        lable.backgroundColor = UIColor(named: "pastelSandy")
+        lable.clipsToBounds = true
+        lable.layer.cornerRadius = 15
+        lable.toAutoLayout()
+        return lable
+    } ()
     
     private let image: UIImageView = {
         let image = UIImageView()
         image.clipsToBounds = true
         image.layer.cornerRadius = 10
-        image.contentMode = .scaleToFill
+        image.contentMode = .scaleAspectFill
         image.toAutoLayout()
         return image
     } ()
@@ -50,19 +59,23 @@ class FavoritesTableViewCell: UITableViewCell {
 
 
     private func setupSubviews() {
-        contentView.addSubviews(image, authorLabel)
-        
-        image.layer.cornerRadius = 10
+        contentView.addSubviews(backgroundLabel, image, authorLabel)
         
         let constraints = [
-            image.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 5),
-            image.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 25),
-            image.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -5),
+            
+            backgroundLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 5),
+            backgroundLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -5),
+            backgroundLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+            backgroundLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+            
+            image.topAnchor.constraint(equalTo: backgroundLabel.topAnchor, constant: 5),
+            image.leadingAnchor.constraint(equalTo: backgroundLabel.leadingAnchor, constant: 25),
+            image.bottomAnchor.constraint(equalTo: backgroundLabel.bottomAnchor, constant: -5),
             image.heightAnchor.constraint(equalToConstant: 40),
             image.widthAnchor.constraint(equalTo: image.heightAnchor),
-            
-            authorLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -10),
-            authorLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -25),
+
+            authorLabel.bottomAnchor.constraint(equalTo: backgroundLabel.bottomAnchor, constant: -15),
+            authorLabel.trailingAnchor.constraint(equalTo: backgroundLabel.trailingAnchor, constant: -25),
             
         ]
         

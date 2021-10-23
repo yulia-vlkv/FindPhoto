@@ -16,9 +16,9 @@ class PicturesViewController: UIViewController {
 //        super.init(nibName: nil, bundle: nil)
 //    }
 //    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
+//    required init?(coder: NSCoder) {
+//        fatalError("init(coder:) has not been implemented")
+//    }
     
     var networkDataFetcher = NetworkDataFetcher()
     private var timer: Timer?

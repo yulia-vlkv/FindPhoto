@@ -15,6 +15,17 @@ class MainTabBarController: UITabBarController, UITabBarControllerDelegate {
         tabBar.backgroundColor = UIColor(named: "pastelSandy")
         tabBar.tintColor = UIColor(named: "paleTeal")
         delegate = self
+        setupTabBar()
+    }
+    
+    private func setupTabBar(){
+        let photoTab = PicturesViewController()
+        photoTab.tabBarItem = UITabBarItem(title: "Search", image: UIImage(systemName: "magnifyingglass.circle.fill"), tag: 0)
+        let favsTab = FavoritesTableViewController()
+        favsTab.tabBarItem = UITabBarItem(title: "Favourites", image: UIImage(systemName: "heart.circle.fill"), tag: 1)
+        let photoNavVC = UINavigationController(rootViewController: photoTab)
+        let favsNavVC = UINavigationController(rootViewController: favsTab)
+        self.viewControllers = [photoNavVC, favsNavVC]
+        
     }
 }
-

@@ -46,13 +46,13 @@ class PicturesDetailsViewController: UIViewController {
         stackView.toAutoLayout()
         stackView.spacing = 20
         stackView.axis = .vertical
-        stackView.distribution = .fill
+        stackView.distribution = .fillProportionally
         stackView.backgroundColor = .clear
         return stackView
     }()
     
-    private let imageView: UIImageView = {
-        let image = UIImageView()
+    private let imageView: ScaledHeightImageView = {
+        let image = ScaledHeightImageView()
         image.backgroundColor = .clear
         image.layer.cornerRadius = 15
         image.toAutoLayout()
@@ -194,7 +194,7 @@ class PicturesDetailsViewController: UIViewController {
         let fontA = UIFont.systemFont(ofSize: 20, weight: .regular)
         let attributesA = [NSAttributedString.Key.font: fontA]
         let textStr = NSMutableAttributedString(string: text, attributes: attributesA)
-        let fontB = UIFont.systemFont(ofSize: 20, weight: .semibold)
+        let fontB = UIFont.systemFont(ofSize: 20, weight: .light)
         let attributesB = [NSAttributedString.Key.font: fontB]
         let dataStr = NSMutableAttributedString(string: data, attributes: attributesB)
         textStr.append(dataStr)
@@ -226,7 +226,7 @@ class PicturesDetailsViewController: UIViewController {
             contentView.widthAnchor.constraint(equalTo: scrollView.widthAnchor),
             
             stackView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: topBottomInset),
-            stackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -topBottomInset),
+            
             stackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: sideInset),
             stackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -sideInset)
         ]
@@ -235,4 +235,25 @@ class PicturesDetailsViewController: UIViewController {
 
     }
     
+}
+
+
+class ScaledHeightImageView: UIImageView {
+
+    override var intrinsicContentSize: CGSize {
+
+        if let myImage = self.image {
+            let myImageWidth = myImage.size.width
+            let myImageHeight = myImage.size.height
+            let myViewWidth = self.frame.size.width
+ 
+            let ratio = myViewWidth/myImageWidth
+            let scaledHeight = myImageHeight * ratio
+
+            return CGSize(width: myViewWidth, height: scaledHeight)
+        }
+
+        return CGSize(width: -1.0, height: -1.0)
+    }
+
 }

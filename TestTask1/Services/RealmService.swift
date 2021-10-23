@@ -9,6 +9,7 @@ import Foundation
 import RealmSwift
 
 class PhotoRealmObject: Object {
+    
     @Persisted var id: String
     @Persisted var url: String
     @Persisted var author: String
@@ -23,7 +24,7 @@ class PhotoRealmObject: Object {
 
 class RealmDataBase {
     
-    private let realm = try! Realm()
+    lazy private var realm = try! Realm()
     
     func savePhoto (id: String, url: String, author: String) {
         let photo = PhotoRealmObject(id: id, url: url, author: author)
