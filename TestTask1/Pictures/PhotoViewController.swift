@@ -7,7 +7,7 @@
 
 import UIKit
 
-class PicturesViewController: UIViewController {
+class PhotoViewController: UIViewController {
     
     var networkDataFetcher = NetworkDataFetcher()
     private var timer: Timer?
@@ -18,7 +18,8 @@ class PicturesViewController: UIViewController {
     private let sectionInserts = UIEdgeInsets(top: 20, left: 20, bottom: 20, right: 20)
     
     private let layout = UICollectionViewFlowLayout()
-    private lazy var picturesCollectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+    private lazy var picturesCollectionView = UICollectionView(frame: .zero,
+                                                               collectionViewLayout: layout)
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -46,7 +47,7 @@ class PicturesViewController: UIViewController {
         
         picturesCollectionView.dataSource = self
         picturesCollectionView.delegate = self
-        picturesCollectionView.register(PicturesCollectionCell.self, forCellWithReuseIdentifier: PicturesCollectionCell.reuseID)
+        picturesCollectionView.register(PhotoCell.self, forCellWithReuseIdentifier: PhotoCell.reuseID)
         
         let constraints = [
             picturesCollectionView.topAnchor.constraint(equalTo: view.topAnchor),
@@ -80,20 +81,20 @@ class PicturesViewController: UIViewController {
 
 // MARK: UICollectionViewDataSource, UICollectionViewDelegateFlowLayout
 
-extension PicturesViewController: UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
+extension PhotoViewController: UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return pictures.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PicturesCollectionCell.reuseID, for: indexPath) as! PicturesCollectionCell
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PhotoCell.reuseID, for: indexPath) as! PhotoCell
         let unspashPhoto = pictures[indexPath.item]
         cell.unsplashPhoto = unspashPhoto
         return cell
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let detailsVC = PicturesDetailsViewController(pictureID: pictures[indexPath.item].id, pictureURL:  pictures[indexPath.item].urls.regular, pictureAuthor: pictures[indexPath.item].user.name)
+        let detailsVC = DetailsViewController(pictureID: pictures[indexPath.item].id, pictureURL:  pictures[indexPath.item].urls.regular, pictureAuthor: pictures[indexPath.item].user.name)
         let navController = UINavigationController(rootViewController: detailsVC)
         self.present(navController, animated: true, completion: nil)
     }
@@ -117,10 +118,9 @@ extension PicturesViewController: UICollectionViewDataSource, UICollectionViewDe
 
 // MARK: UISearchBarDelegate
 
-extension PicturesViewController: UISearchBarDelegate {
+extension PhotoViewController: UISearchBarDelegate {
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        print(searchText)
         
         timer?.invalidate()
         timer = Timer.scheduledTimer(withTimeInterval: 0.5, repeats: false, block: { (_) in
@@ -131,5 +131,4 @@ extension PicturesViewController: UISearchBarDelegate {
             }
         })
     }
-    
 }

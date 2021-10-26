@@ -9,17 +9,13 @@ import Foundation
 import UIKit
 import SDWebImage
 
-class FavoritesTableViewCell: UITableViewCell {
+class FavoritesCell: UITableViewCell {
     
     var photo: PhotoRealmObject! {
         didSet {
-            setCell()
+            authorLabel.text = "by \(photo.author)"
+            image.sd_setImage(with: URL(string: photo.url), completed: nil)
         }
-    }
-    
-    private func setCell() {
-        authorLabel.text = "by \(photo.author)"
-        image.sd_setImage(with: URL(string: photo.url), completed: nil)
     }
     
     private var topBottomInset: CGFloat { return 5 }
@@ -67,20 +63,28 @@ class FavoritesTableViewCell: UITableViewCell {
         contentView.addSubviews(backgroundLabel, image, authorLabel)
         
         let constraints = [
-            backgroundLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: topBottomInset),
-            backgroundLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -topBottomInset),
+            backgroundLabel.topAnchor.constraint(equalTo: contentView.topAnchor,
+                                                 constant: topBottomInset),
+            backgroundLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor,
+                                                    constant: -topBottomInset),
             backgroundLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
             backgroundLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
             
-            image.topAnchor.constraint(equalTo: backgroundLabel.topAnchor, constant: topBottomInset),
-            image.leadingAnchor.constraint(equalTo: backgroundLabel.leadingAnchor, constant: sideInset),
-            image.bottomAnchor.constraint(equalTo: backgroundLabel.bottomAnchor, constant: -topBottomInset),
+            image.topAnchor.constraint(equalTo: backgroundLabel.topAnchor,
+                                       constant: topBottomInset),
+            image.leadingAnchor.constraint(equalTo: backgroundLabel.leadingAnchor,
+                                           constant: sideInset),
+            image.bottomAnchor.constraint(equalTo: backgroundLabel.bottomAnchor,
+                                          constant: -topBottomInset),
             image.heightAnchor.constraint(equalToConstant: height),
             image.widthAnchor.constraint(equalTo: image.heightAnchor),
 
-            authorLabel.bottomAnchor.constraint(equalTo: backgroundLabel.bottomAnchor, constant: -topBottomInset),
-            authorLabel.trailingAnchor.constraint(equalTo: backgroundLabel.trailingAnchor, constant: -sideInset),
-            authorLabel.leadingAnchor.constraint(equalTo: image.trailingAnchor, constant: sideInset)
+            authorLabel.bottomAnchor.constraint(equalTo: backgroundLabel.bottomAnchor,
+                                                constant: -topBottomInset),
+            authorLabel.trailingAnchor.constraint(equalTo: backgroundLabel.trailingAnchor,
+                                                  constant: -sideInset),
+            authorLabel.leadingAnchor.constraint(equalTo: image.trailingAnchor,
+                                                 constant: sideInset)
         ]
         
         NSLayoutConstraint.activate(constraints)

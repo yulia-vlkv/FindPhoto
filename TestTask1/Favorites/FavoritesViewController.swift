@@ -9,7 +9,7 @@ import UIKit
 import RealmSwift
 import SDWebImage
 
-class FavoritesTableViewController: UIViewController {
+class FavoritesViewController: UIViewController {
     
     private var notificationToken: NotificationToken? = nil
     static let reuseID = "cellID"
@@ -33,7 +33,7 @@ class FavoritesTableViewController: UIViewController {
         super.viewDidLoad()
         
         favoritePhotos = realmFavsArray.getSavedPhotos()
-        favoritesTableView.register(FavoritesTableViewCell.self, forCellReuseIdentifier: FavoritesTableViewController.reuseID)
+        favoritesTableView.register(FavoritesCell.self, forCellReuseIdentifier: FavoritesViewController.reuseID)
         favoritesTableView.dataSource = self
         favoritesTableView.delegate = self
         
@@ -54,7 +54,7 @@ class FavoritesTableViewController: UIViewController {
                 tableView.reloadData()
             case .update(_, let deletions, let insertions, let modifications):
                 tableView.beginUpdates()
-                self?.favoritePhotos = (self?.realmFavsArray.getSavedPhotos())!
+                self?.favoritePhotos = self?.realmFavsArray.getSavedPhotos() as! [PhotoRealmObject]
                 tableView.deleteRows(at: deletions.map({ IndexPath(row: $0, section: 0)}), with: .automatic)
                 tableView.insertRows(at: insertions.map({ IndexPath(row: $0, section: 0) }), with: .automatic)
                 tableView.reloadRows(at: modifications.map({ IndexPath(row: $0, section: 0) }), with: .automatic)
@@ -85,8 +85,10 @@ class FavoritesTableViewController: UIViewController {
         let constraints = [
             favoritesTableView.topAnchor.constraint(equalTo: view.topAnchor),
             favoritesTableView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-            favoritesTableView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: sideInset),
-            favoritesTableView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -sideInset)
+            favoritesTableView.leadingAnchor.constraint(equalTo: view.leadingAnchor,
+                                                        constant: sideInset),
+            favoritesTableView.trailingAnchor.constraint(equalTo: view.trailingAnchor,
+                                                         constant: -sideInset)
         ]
         
         NSLayoutConstraint.activate(constraints)
@@ -96,20 +98,20 @@ class FavoritesTableViewController: UIViewController {
 
 // MARK: UITableViewDataSource, UITableViewDelegate
 
-extension FavoritesTableViewController: UITableViewDataSource, UITableViewDelegate {
+extension FavoritesViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return favoritePhotos.count
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: FavoritesTableViewController.reuseID) as! FavoritesTableViewCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: FavoritesViewController.reuseID) as! FavoritesCell
         cell.backgroundColor = UIColor(named: "almostWhite")
         cell.photo = favoritePhotos[indexPath.item]
         return cell
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let detailsVC = PicturesDetailsViewController(pictureID: favoritePhotos[indexPath.item].id, pictureURL: favoritePhotos[indexPath.item].url, pictureAuthor: favoritePhotos[indexPath.item].author)
+        let detailsVC = DetailsViewController(pictureID: favoritePhotos[indexPath.item].id, pictureURL: favoritePhotos[indexPath.item].url, pictureAuthor: favoritePhotos[indexPath.item].author)
         let navController = UINavigationController(rootViewController: detailsVC)
         self.present(navController, animated: true, completion: nil)
         favoritesTableView.reloadData()

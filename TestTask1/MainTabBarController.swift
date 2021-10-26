@@ -19,9 +19,9 @@ class MainTabBarController: UITabBarController, UITabBarControllerDelegate {
     }
     
     private func setupTabBar(){
-        let photoTab = PicturesViewController()
+        let photoTab = PhotoViewController()
         photoTab.tabBarItem = UITabBarItem(title: "Search", image: UIImage(systemName: "magnifyingglass.circle.fill"), tag: 0)
-        let favsTab = FavoritesTableViewController()
+        let favsTab = FavoritesViewController()
         favsTab.tabBarItem = UITabBarItem(title: "Favourites", image: UIImage(systemName: "heart.circle.fill"), tag: 1)
         let photoNavVC = UINavigationController(rootViewController: photoTab)
         let favsNavVC = UINavigationController(rootViewController: favsTab)

@@ -8,7 +8,7 @@
 import UIKit
 import SDWebImage
 
-class PicturesDetailsViewController: UIViewController {
+class DetailsViewController: UIViewController {
     
     private let networkDataFetcher = NetworkDataFetcher()
     public let realm = RealmDataBase()
@@ -65,7 +65,7 @@ class PicturesDetailsViewController: UIViewController {
         return label
     }()
     
-    private let uploadeDateLabel: UILabel = {
+    private let dateLabel: UILabel = {
         let label = UILabel()
         label.text = "Date: "
         label.font = UIFont.systemFont(ofSize: 18)
@@ -161,34 +161,66 @@ class PicturesDetailsViewController: UIViewController {
     
     // MARK: func to assign picture values to labels
     private func setInfo() {
-        
+        setImageView()
+        setAuthorLabel()
+        setDateLabel()
+        setLocationLabel()
+        setDownloadCountLabel()
+        setLocationLabel()
+    }
+    
+    private func setImageView(){
         guard let picture = pictureDetails else { return }
-        
-        imageView.sd_setImage(with: URL(string: picture.urls.regular), completed: nil)
-        
-        updateLabels(lable: authorLabel, text: authorLabel.text!, data: picture.user.name)
-        
+        imageView.sd_setImage(with: URL(string: picture.urls.regular),
+                              completed: nil)
+    }
+    
+    private func setAuthorLabel() {
+        guard let picture = pictureDetails else { return }
+        updateLabels(lable: authorLabel,
+                     text: authorLabel.text ?? "Unknown",
+                     data: picture.user.name)
+    }
+    
+    private func setDateLabel() {
+        guard let picture = pictureDetails else { return }
         let dateGet = DateFormatter()
         dateGet.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
         let datePrint = DateFormatter()
         datePrint.dateFormat = "MMM d, yyyy"
         if let date = dateGet.date(from: picture.created_at){
             let finalDate = datePrint.string(from: date)
-            updateLabels(lable: uploadeDateLabel, text: uploadeDateLabel.text!, data: finalDate)
+            updateLabels(lable: dateLabel, text: dateLabel.text ?? "Unknown", data: finalDate)
         } else {
             print("An error while decoding the date string")
         }
-        
-        updateLabels(lable: downloadCountLabel, text: downloadCountLabel.text!, data: String(picture.downloads))
-        
+    }
+    
+    private func setDownloadCountLabel() {
+        guard let picture = pictureDetails else { return }
+        updateLabels(lable: downloadCountLabel,
+                     text: downloadCountLabel.text ?? "Unknown",
+                     data: String(picture.downloads))
+    }
+    
+    private func setLocationLabel() {
+        guard let picture = pictureDetails else { return }
         if picture.location.city != nil && picture.location.country != nil {
-            updateLabels(lable: locationLabel, text: locationLabel.text!, data: "\(picture.location.city!), \(picture.location.country!)")
+            updateLabels(lable: locationLabel,
+                         text: locationLabel.text ?? "Unknown",
+                         data: "\(picture.location.city ?? " - "), \(picture.location.country ?? "")")
         } else if picture.location.city != nil {
-            updateLabels(lable: locationLabel, text: locationLabel.text!, data: "\(picture.location.city!)")
+            updateLabels(lable: locationLabel,
+                         text: locationLabel.text ?? "Unknown",
+                         data: "\(picture.location.city ?? " - ")")
         } else if picture.location.country != nil {
-                updateLabels(lable: locationLabel, text: locationLabel.text!, data: "\(picture.location.country!)")
+                updateLabels(lable: locationLabel,
+                             text: locationLabel.text ?? "Unknown",
+                             data: "\(picture.location.country ?? " - ")")
         } else {
-            updateLabels(lable: locationLabel, text: locationLabel.text!, data: " - ")
+            updateLabels(lable: locationLabel,
+                         text: locationLabel.text ?? "Unknown",
+                         data: "-")
         }
     }
         
@@ -210,7 +242,7 @@ class PicturesDetailsViewController: UIViewController {
         contentView.addSubview(stackView)
         stackView.addArrangedSubview(imageView)
         stackView.addArrangedSubview(authorLabel)
-        stackView.addArrangedSubview(uploadeDateLabel)
+        stackView.addArrangedSubview(dateLabel)
         stackView.addArrangedSubview(locationLabel)
         stackView.addArrangedSubview(downloadCountLabel)
 

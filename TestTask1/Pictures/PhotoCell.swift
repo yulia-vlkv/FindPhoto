@@ -8,7 +8,7 @@
 import UIKit
 import SDWebImage
 
-class PicturesCollectionCell: UICollectionViewCell {
+class PhotoCell: UICollectionViewCell {
     
     static let reuseID = "PictureCell"
     
